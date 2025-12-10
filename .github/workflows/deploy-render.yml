@@ -1,0 +1,23 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches: ["app/src/app"]   # jis branch pe tum kaam kar rahi ho
+  workflow_dispatch:             # manually run karne ka option
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Yahan test/lint bhi add kar sakte ho, filhaal sirf deploy trigger kar rahe hain.
+
+      - name: Trigger Render deploy
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          echo "Triggering deploy on Render..."
+          curl -X POST "$RENDER_DEPLOY_HOOK_URL"
